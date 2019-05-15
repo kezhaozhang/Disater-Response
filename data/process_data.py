@@ -31,7 +31,9 @@ def load_data(messages_filepath, categories_filepath):
 def clean_data(df):
     #remove duplicates
     df.drop_duplicates(inplace=True)
-
+    #remove columns with only a single value
+    col_with_more_vals = df.apply(lambda x: len(pd.unique(x))) > 1
+    df = df.loc[:, col_with_more_vals]
     return df
 
 
