@@ -44,18 +44,23 @@ def build_model():
                     ('tfidf', tfidf),
                     ('clf', multi_target_classifier)])
     
-    parameters = {'vect__ngram_range':[(1,1), (1,2)],
-             'vect__max_df':(0.5, 0.75, 1),
-             'vect__max_features': (None, 5000, 10000),
+    parameters = {
+            # 'vect__ngram_range':[(1,1), (1,2)],
+            # 'vect__max_df':(0.5, 0.75, 1),
+            # 'vect__max_features': (None, 5000, 10000),
              'tfidf__use_idf': (True, False),
-             'clf__estimator__n_estimators':(50, 100, 200)}
-    cv = GridSearchCV(pipeline, param_grid=parameters)
+             'clf__estimator__n_estimators':(100, 200)
+             }
+    cv = GridSearchCV(pipeline, param_grid=parameters, cv=3)
 
     return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+     y_pred = model.predict(X_test)
+     for i, c  in enumerate(category_names):
+        print('==========='+c+'==========')
+        print(classification_report(Y_test[c], y_pred[:, i]))
 
 
 def save_model(model, model_filepath):
