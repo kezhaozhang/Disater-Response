@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import classification_report, f1_score, recall_score, precision_score, accuracy_score
 
 def load_data(database_filepath):
+    """Load data from sqlite database."""
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql('select * from message', con=engine)
     X = df['message']
@@ -23,6 +24,7 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """Tokenize a text string, lemmatize resulting words and convert them to lower case.""" 
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     
@@ -35,6 +37,8 @@ def tokenize(text):
 
 
 def build_model():
+    """Build sklearn pipeline and use graid serach to optmize model.
+    """
     vectorizer = CountVectorizer(tokenizer=tokenize)
     tfidf = TfidfTransformer()
     classifier = GradientBoostingClassifier()
@@ -57,6 +61,8 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """Evaluate model performance with test data, report F1 score, precison, recall and accuracy.
+    """
      y_pred = model.predict(X_test)
      for i, c  in enumerate(category_names):
         print('==========='+c+'==========')
@@ -64,6 +70,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """Save model to pickle file"""
     pd.to_pickle(model, model_filepath)
 
 

@@ -5,6 +5,8 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    """ Load messages and categories files.
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     #merge datasets
@@ -29,6 +31,8 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """Clean data. Remove duplicates and columns with a single value.
+    """
     #remove duplicates
     df.drop_duplicates(inplace=True)
     #remove columns with only a single value
@@ -38,6 +42,7 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """Save dataframe to sqlite database."""
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('Message', engine, index=False)      
 
